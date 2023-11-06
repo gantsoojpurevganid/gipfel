@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../luujin_new"
+		},
+		{
+			"path": "../../../gipfel-frontend"
+		},
+		{
+			"path": "../../../luujin_test1"
+		},
+		{
+			"path": "../../../Work/tally"
+		},
+		{
+			"path": "../../gipfel-admin"
+		}
+	],
+	"settings": {}
+}
