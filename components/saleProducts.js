@@ -19,7 +19,7 @@ const SaleProducts = ({ top = 20, SALE_PRODUCT_ITEMS = [], title }) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 lg:px-[64px]">
+      <div className="flex justify-between lg:px-[64px]">
         <p className=" text-[34px] font-bold text-primary">Хямдрал </p>
         {/* <Link
           href="/products/saleProduct"
@@ -43,7 +43,23 @@ const SaleProducts = ({ top = 20, SALE_PRODUCT_ITEMS = [], title }) => {
             slidesPerView={6}
             onSlideChange={() => console.log("slide change")}
             onSwiper={(swiper) => console.log(swiper)}
-            style={{ overflowY: "visible", minWidth: "1580px" }}
+            style={{ overflowY: "visible" }}
+            breakpoints={{
+              // when window width is >= 640px
+              240: {
+                width: 240,
+                slidesPerView: 1,
+              },
+              // when window width is >= 768px
+              420: {
+                width: 420,
+                slidesPerView: 1,
+              },
+              620: {
+                width: 620,
+                slidesPerView: 2,
+              },
+            }}
           >
             {SALE_PRODUCT_ITEMS?.products_with_sale?.length > 0 &&
               SALE_PRODUCT_ITEMS?.products_with_sale?.map((el, index) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Image from "next/image";
 import CartContext from "@/context/CartContext";
 import "react-slideshow-image/dist/styles.css";
@@ -12,8 +12,8 @@ const Card = ({ el = [] }) => {
     toastTag,
     deleteItemFromWishlist,
   } = useContext(CartContext);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [productQuantity, setProductQuantity] = useState(1);
   const increaseQty = () => {
     if (productQuantity >= el?.quantity) {
@@ -109,11 +109,30 @@ const Card = ({ el = [] }) => {
           </div>
           <div className="max-w-[1400px] relative">
             <div className="px-10 pt-10">
-              <div
+              {/* <div
                 style={{
                   backgroundImage: `url(${el?.product_images[currentIndex]?.high_url})`,
                 }}
                 className="w-full h-[150px] rounded-2xl bg-center bg-cover"
+                lg:bg-[url("https://image.bosa.mn/media/uploads/924b2cca-2ed9-4a69-ae94-5b14b1c8c520.png")]
+              ></div> */}
+              <div
+                className={`w-full h-[150px] rounded-2xl bg-center bg-cover 
+                lg:bg-[image:var(--image-url--lg)]
+                md:bg-[image:var(--image-url--md)]
+                mv:bg-[image:var(--image-url--mv)]
+                `}
+                style={{
+                  "--image-url--md": `url(${
+                    el?.product_images[currentIndex]?.mid_url ?? ""
+                  })`,
+                  "--image-url--lg": `url(${
+                    el?.product_images[currentIndex]?.high_url ?? ""
+                  })`,
+                  "--image-url--mv": `url(${
+                    el?.product_images[currentIndex]?.low_url ?? ""
+                  })`,
+                }}
               ></div>
               <div className={`grid grid-cols-${el?.product_images?.length} `}>
                 {el?.product_images.map((url, index) => (

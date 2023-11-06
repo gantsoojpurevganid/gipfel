@@ -25,19 +25,23 @@ const HitProducts = ({ HIT_PRODUCT_ITEMS = [] }) => {
             slidesPerView={6}
             onSlideChange={() => console.log("slide change")}
             onSwiper={(swiper) => console.log(swiper)}
-            style={{ overflowY: "visible", minWidth: "1580px" }}
-            // breakpoints={{
-            //   // when window width is >= 640px
-            //   640: {
-            //     width: 640,
-            //     slidesPerView: 2,
-            //   },
-            //   // when window width is >= 768px
-            //   1280: {
-            //     width: 1280,
-            //     slidesPerView: 2,
-            //   },
-            // }}
+            style={{ overflowY: "visible" }}
+            breakpoints={{
+              // when window width is >= 640px
+              240: {
+                width: 240,
+                slidesPerView: 1,
+              },
+              // when window width is >= 768px
+              420: {
+                width: 420,
+                slidesPerView: 1,
+              },
+              620: {
+                width: 620,
+                slidesPerView: 2,
+              },
+            }}
           >
             {HIT_PRODUCT_ITEMS?.hit_products?.length > 0 &&
               HIT_PRODUCT_ITEMS?.hit_products?.map((el, index) => {

@@ -4,6 +4,9 @@ import Card from "./card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/bundle";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 export default function NewProducts({ NEW_PRODUCT_ITEMS = [] }) {
   return (
@@ -32,7 +35,23 @@ export default function NewProducts({ NEW_PRODUCT_ITEMS = [] }) {
               slidesPerView={5}
               onSlideChange={() => console.log("slide change")}
               onSwiper={(swiper) => console.log(swiper)}
-              style={{ overflowY: "visible", minWidth: "1580px" }}
+              style={{ overflowY: "visible" }}
+              breakpoints={{
+                // when window width is >= 640px
+                240: {
+                  width: 240,
+                  slidesPerView: 1,
+                },
+                // when window width is >= 768px
+                420: {
+                  width: 420,
+                  slidesPerView: 1,
+                },
+                620: {
+                  width: 620,
+                  slidesPerView: 2,
+                },
+              }}
             >
               {NEW_PRODUCT_ITEMS?.new_products?.map((el, index) => {
                 return (
