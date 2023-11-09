@@ -144,3 +144,17 @@ export const useDeleteSWRMutation = (endPoint, method = "DELETE") =>
     async (url, { arg }) =>
       await axios(url, { method, data: arg }).then((r) => r)
   );
+
+export const useSWRMutationSort = (endPoint, method = "GET") =>
+  useSWRMutationOrig(
+    endPoint,
+    async (url, { arg }) =>
+      await axios(url, { method, data: arg }).then((r) => r)
+  );
+
+export const useSWRMutationSortNewAsc = (endPoint, method = "GET") =>
+  useSWRMutationOrig(
+    endPoint,
+    async (url, { arg }) =>
+      await axios(url, { method, data: arg }).then((r) => r)
+  );

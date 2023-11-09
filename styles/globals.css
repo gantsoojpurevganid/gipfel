@@ -160,18 +160,20 @@ body {
 }
 
 .toast {
-  animation: toast_slide 0.5s linear;
+  animation: toast_slide 0.9s linear;
 }
 
 @keyframes toast_slide {
   0%{
-    transform: translateX(100%);
+    transform: translateY(-100%);
   }
+  /* 50%{
+    transform: translateY(50%);
+  } */
   100%{
-    transform: translateX(-10%);
+    transform: translateY(50%);
   }
 }
-
 .li_class > .ul_class {
   transform: translatex(100%) scale(0)
 }

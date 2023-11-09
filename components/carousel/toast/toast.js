@@ -11,7 +11,7 @@ const Toast = ({ message, color, icon, type }) => {
   };
   return (
     <div
-      className={`top-8 fixed justify-center items-center flex py-3 px-6 border-[1px] rounded-lg bg-${color} z-50 right-0 toast`}
+      className={`top-8 fixed justify-center items-center flex py-3 px-6 border-[1px] rounded-lg bg-${color} z-50 right-1/2 top-[0px] toast`}
       role="alert"
     >
       <div className="flex flex-row gap-4">

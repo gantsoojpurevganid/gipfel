@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useSWR } from "@/fetcher";
+import {
+  useSWRMutation,
+  useSWRMutationSort,
+  useSWRMutationSortNewAsc,
+} from "@/fetcher";
 import { Breadcrumb } from "@/components/breadcrumb";
 import Image from "next/image";
 import Top from "@/components/top";
@@ -16,21 +21,59 @@ import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import ChevronLeftIcon from "@heroicons/react/24/outline/ChevronLeftIcon";
 import Card from "@/components/card";
-
+import Link from "next/link";
 export default function Product() {
   const { login, user } = useAuth();
   const { addItemToCart, cart } = useContext(CartContext);
   const router = useRouter();
+
   const { categoryId } = router.query;
   const [min, setMin] = useState(50000);
   const [max, setMax] = useState(150000);
+  const { trigger: saleTrigger, isMutating: saleLoad } = useSWRMutationSort(
+    `/api/filtered-products/?category_pk=${categoryId}&ordering=sale`
+  );
+
+  const { trigger: saleTriggerAsc, isMutating: saleLoadAsc } =
+    useSWRMutationSort(
+      `/api/filtered-products/?category_pk=${categoryId}&ordering=-sale`
+    );
+
+  const { trigger: newTrigger, isMutating: newLoad } = useSWRMutationSort(
+    `/api/filtered-products/?category_pk=${categoryId}&ordering=is_new`
+  );
+  const { trigger: newTriggerAsc, isMutating: newLoadAsc } = useSWRMutationSort(
+    `/api/filtered-products/?category_pk=${categoryId}&ordering=-is_new`
+  );
+  const { trigger: nameTrigger, isMutating: nameLoad } = useSWRMutationSort(
+    `/api/filtered-products/?category_pk=${categoryId}&ordering=name`
+  );
+  const { trigger: nameTriggerAsc, isMutating: nameLoadAsc } =
+    useSWRMutationSort(
+      `/api/filtered-products/?category_pk=${categoryId}&ordering=-name`
+    );
+  const { trigger: priceTrigger, isMutating: priceLoad } = useSWRMutationSort(
+    `/api/filtered-products/?category_pk=${categoryId}&ordering=price`
+  );
+  const { trigger: priceTriggerAsc, isMutating: priceLoadAsc } =
+    useSWRMutationSort(
+      `/api/filtered-products/?category_pk=${categoryId}&ordering=-price`
+    );
   const { data: data, isLoading } = useSWR(
     `/api/filtered-products/?category_pk=${categoryId}`,
     {
       method: "GET",
-      params: { category_pk: `3` },
+      // params: { category_pk: `3` },
     }
   );
+  useEffect(() => {
+    setCategoryData(data);
+  }, [data]);
+  const [asc, setAsc] = useState(false);
+  const [ascSale, setAscSale] = useState(false);
+  const [ascName, setAscName] = useState(false);
+  const [ascPrice, setAscPrice] = useState(false);
+  const [categoryData, setCategoryData] = useState(data);
 
   const divStyle = {
     display: "flex",
@@ -45,6 +88,112 @@ export default function Product() {
     setMax(150000 - e.target.value);
   };
 
+  const newSort = async (e) => {
+    if (e.target.checked) {
+      setAsc(true);
+      try {
+        const res = await newTrigger();
+        console.log("res.status", res);
+        if (res.status == 200) {
+          setCategoryData(res.data);
+          // data = res;
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      setAsc(false);
+      try {
+        const res = await newTriggerAsc();
+        console.log("res.status", res);
+        if (res.status == 200) {
+          setCategoryData(res.data);
+          // data = res;
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+  };
+
+  const saleSort = async (e) => {
+    if (e.target.checked) {
+      setAscSale(true);
+      try {
+        const res = await saleTrigger();
+        console.log("res.status", res);
+        if (res.status == 200) {
+          setCategoryData(res.data);
+          // data = res;
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      setAscSale(false);
+      try {
+        const res = await saleTriggerAsc();
+        console.log("res.status", res);
+        if (res.status == 200) {
+          setCategoryData(res.data);
+          // data = res;
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+  };
+
+  const nameSort = async (e) => {
+    if (e.target.checked) {
+      setAscName(true);
+      try {
+        const res = await nameTrigger();
+        if (res.status == 200) {
+          setCategoryData(res.data);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      setAscName(false);
+      try {
+        const res = await nameTriggerAsc();
+        if (res.status == 200) {
+          setCategoryData(res.data);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+  };
+
+  const priceSort = async (e) => {
+    if (e.target.checked) {
+      setAscPrice(true);
+      try {
+        const res = await priceTrigger();
+        if (res.status == 200) {
+          setCategoryData(res.data);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      setAscPrice(false);
+      try {
+        const res = await priceTriggerAsc();
+        if (res.status == 200) {
+          setCategoryData(res.data);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+  };
+
+  console.log("gt", data);
+  console.log("categoryData", categoryData);
   return (
     <div className="bg-white">
       <Top></Top>
@@ -52,6 +201,145 @@ export default function Product() {
       <div className="lg:p-[64px] p-4 bg-content">
         <div className="">
           <div className="pb-6">
+            <div className="bg-white py-4 px-4 w-full flex gap-6">
+              <div
+                className="flex flex-row gap-2 cursor-pointer"
+                // onClick={newSort}
+                value={true}
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    className="sr-only peer"
+                    onChange={newSort}
+                  ></input>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Шинээр
+                  </span>
+                </label>
+                {asc ? (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-down.svg"
+                    height={20}
+                    width={30}
+                  />
+                ) : (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-up.svg"
+                    height={20}
+                    width={30}
+                  />
+                )}
+              </div>
+              <div
+                className="flex flex-row gap-2 cursor-pointer"
+                // onClick={newSort}
+                value={true}
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    className="sr-only peer"
+                    onChange={saleSort}
+                  ></input>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Хямдралаар
+                  </span>
+                </label>
+                {ascSale ? (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-down.svg"
+                    height={20}
+                    width={30}
+                  />
+                ) : (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-up.svg"
+                    height={20}
+                    width={30}
+                  />
+                )}
+              </div>
+              <div
+                className="flex flex-row gap-2 cursor-pointer"
+                // onClick={newSort}
+                value={true}
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    className="sr-only peer"
+                    onChange={nameSort}
+                  ></input>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Нэрээр
+                  </span>
+                </label>
+                {ascName ? (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-down.svg"
+                    height={20}
+                    width={30}
+                  />
+                ) : (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-up.svg"
+                    height={20}
+                    width={30}
+                  />
+                )}
+              </div>
+              <div
+                className="flex flex-row gap-2 cursor-pointer"
+                // onClick={newSort}
+                value={true}
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    className="sr-only peer"
+                    onChange={priceSort}
+                  ></input>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Үнээр
+                  </span>
+                </label>
+                {ascPrice ? (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-down.svg"
+                    height={20}
+                    width={30}
+                  />
+                ) : (
+                  <Image
+                    alt="Your"
+                    className="lg:pr-2 content-center"
+                    src="/assets/svg/header/arrow-sm-up.svg"
+                    height={20}
+                    width={30}
+                  />
+                )}
+              </div>
+            </div>
+
             {/* <Breadcrumb links={breadCrumbsData} /> */}
           </div>
           {isLoading ? (
@@ -275,8 +563,8 @@ export default function Product() {
                           <ToastContainer />
                         </li>
                       ))} */}
-                    {data?.results?.length > 0 &&
-                      data?.results?.map((el, index) => {
+                    {categoryData?.results?.length > 0 &&
+                      categoryData?.results?.map((el, index) => {
                         return <Card key={el.id} el={el} />;
                       })}
                   </ul>
